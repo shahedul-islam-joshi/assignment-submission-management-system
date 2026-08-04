@@ -51,6 +51,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ClassService>();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<TeacherAssignmentService>();
+builder.Services.AddScoped<AssignmentService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
