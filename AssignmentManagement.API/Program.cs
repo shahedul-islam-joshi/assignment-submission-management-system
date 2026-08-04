@@ -50,6 +50,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ClassService>();
 builder.Services.AddScoped<SubjectService>();
+builder.Services.AddScoped<TeacherAssignmentService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
