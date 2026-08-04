@@ -49,6 +49,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ClassService>();
+builder.Services.AddScoped<SubjectService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
