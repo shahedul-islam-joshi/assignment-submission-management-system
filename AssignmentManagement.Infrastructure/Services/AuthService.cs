@@ -61,6 +61,29 @@ public class AuthService
         return new AuthResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email, Role = user.Role.Name, Token = token };
     }
 
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        return await _db.Users.Include(u => u.Role)
+            .Select(u => new UserDto
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                Email = u.Email,
+                Role = u.Role.Name,
+                ClassId = u.ClassId
+            })
+            .ToListAsync();
+    }
+
+    public async Task<bool> DeleteUserAsync(int id)
+    {
+        var user = await _db.Users.FindAsync(id);
+        if (user == null) return false;
+        _db.Users.Remove(user);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
     private string GenerateToken(User user, string roleName)
     {
         var claims = new[]
