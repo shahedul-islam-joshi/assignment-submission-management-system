@@ -1,9 +1,11 @@
-using System.Text;
+using AssignmentManagement.Infrastructure.Data;
+using AssignmentManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AssignmentManagement.Infrastructure.Data;
-using AssignmentManagement.Infrastructure.Services;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,33 @@ builder.Services.AddControllers();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -20,6 +48,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ClassService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
