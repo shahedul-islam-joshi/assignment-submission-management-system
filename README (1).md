@@ -157,7 +157,6 @@ dotnet test
 
 - No password reset / forgot-password flow.
 - No pagination or advanced filtering on list endpoints (Users, Assignments, Submissions).
-- The Admin dashboard UI does not yet have a form for creating Teacher-Subject-Class assignments (the API endpoint `POST /api/TeacherAssignments` exists and is fully functional; it can be tested via Swagger).
 - JWT tokens are valid for 24 hours; there is no refresh-token flow.
 - File/attachment uploads are not implemented — submissions are text-based answers only.
 - No email notifications for publishing, grading, or deadlines.
