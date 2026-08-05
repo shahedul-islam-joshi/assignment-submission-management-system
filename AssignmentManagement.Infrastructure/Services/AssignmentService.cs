@@ -64,7 +64,7 @@ public class AssignmentService
         {
             Title = dto.Title,
             Description = dto.Description,
-            DueDate = dto.DueDate,
+            DueDate = DateTime.SpecifyKind(dto.DueDate, DateTimeKind.Utc),
             MaxMarks = dto.MaxMarks,
             ClassId = dto.ClassId,
             SubjectId = dto.SubjectId,
@@ -88,7 +88,7 @@ public class AssignmentService
 
         entity.Title = dto.Title;
         entity.Description = dto.Description;
-        entity.DueDate = dto.DueDate;
+        entity.DueDate = DateTime.SpecifyKind(dto.DueDate, DateTimeKind.Utc);
         entity.MaxMarks = dto.MaxMarks;
         await _db.SaveChangesAsync();
         return ToDto(entity);
