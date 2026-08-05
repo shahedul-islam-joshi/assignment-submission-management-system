@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
@@ -19,6 +18,7 @@ export default function LoginPage() {
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("userId", res.data.id.toString());
       localStorage.setItem("fullName", res.data.fullName);
+      if (res.data.classId) localStorage.setItem("classId", res.data.classId.toString());
 
       if (res.data.role === "Admin") router.push("/admin");
       else if (res.data.role === "Teacher") router.push("/teacher");

@@ -47,7 +47,16 @@ public class AuthService
         await _db.SaveChangesAsync();
 
         var token = GenerateToken(user, role.Name);
-        return new AuthResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email, Role = role.Name, Token = token };
+
+        return new AuthResponseDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = role.Name,
+            Token = token,
+            ClassId = user.ClassId
+        };
     }
 
     public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
@@ -58,7 +67,16 @@ public class AuthService
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash)) return null;
 
         var token = GenerateToken(user, user.Role.Name);
-        return new AuthResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email, Role = user.Role.Name, Token = token };
+
+        return new AuthResponseDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role.Name,
+            Token = token,
+            ClassId = user.ClassId
+        };
     }
 
     public async Task<List<UserDto>> GetAllUsersAsync()
@@ -79,6 +97,7 @@ public class AuthService
     {
         var user = await _db.Users.FindAsync(id);
         if (user == null) return false;
+
         _db.Users.Remove(user);
         await _db.SaveChangesAsync();
         return true;
