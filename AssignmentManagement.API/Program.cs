@@ -12,7 +12,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://YOUR-FRONTEND-URL.onrender.com")
+        policy.WithOrigins("http://localhost:3000", "https://assignment-frontend-mx0u.onrender.com")
       .AllowAnyHeader()
       .AllowAnyMethod();
     });
