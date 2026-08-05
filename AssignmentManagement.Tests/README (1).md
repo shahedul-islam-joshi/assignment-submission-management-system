@@ -30,8 +30,8 @@ A role-based web application for a school/college where Teachers create assignme
   - Marks must be between 0 and the assignment's max marks
   - Pagination on the Users list
 - Swagger/OpenAPI docs for the backend
-- Unit tests (xUnit) covering the core business rules above
 - Docker support for the backend (see `Dockerfile`)
+- Unit tests (xUnit) covering the core business rules above
 
 ## Technology Stack
 
@@ -142,6 +142,17 @@ Open `http://localhost:3000` in your browser.
 cd AssignmentManagement.Tests
 dotnet test
 ```
+
+### 6. Docker (Backend)
+
+A `Dockerfile` is included for the backend. To build and run it locally:
+
+```bash
+docker build -t assignment-api .
+docker run -p 10000:10000 --env-file AssignmentManagement.API/.env.example assignment-api
+```
+
+(Fill in real values in a copy of `.env.example` before running — see below.)
 
 ## Demo Credentials
 

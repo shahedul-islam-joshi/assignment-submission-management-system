@@ -2,6 +2,14 @@
 
 A role-based web application for a school/college where Teachers create assignments, Students submit their work, and Teachers grade and give feedback. Admin manages users, classes, subjects, and teacher-subject-class assignments.
 
+## Live Demo
+
+- Frontend: https://assignment-frontend-mx0u.onrender.com
+- Backend API: https://assignment-api-d6ku.onrender.com
+- Swagger: https://assignment-api-d6ku.onrender.com/swagger
+
+> Free-tier hosting — the backend may take 30-60 seconds to wake up on first request after inactivity.
+
 ## Overview
 
 - **Admin** creates Teachers/Students, manages Classes and Subjects, and assigns Teachers to a Subject + Class.
@@ -23,6 +31,7 @@ A role-based web application for a school/college where Teachers create assignme
   - Pagination on the Users list
 - Swagger/OpenAPI docs for the backend
 - Unit tests (xUnit) covering the core business rules above
+- Docker support for the backend (see `Dockerfile`)
 
 ## Technology Stack
 
@@ -161,4 +170,3 @@ dotnet test
 - JWT tokens are valid for 24 hours; there is no refresh-token flow.
 - File/attachment uploads are not implemented — submissions are text-based answers only.
 - No email notifications for publishing, grading, or deadlines.
-- Not yet deployed to a live URL (designed to run locally per the setup instructions above).
