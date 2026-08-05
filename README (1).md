@@ -20,6 +20,7 @@ A role-based web application for a school/college where Teachers create assignme
   - One submission per student per assignment (updates instead of duplicating)
   - Submission blocked after the deadline
   - Marks must be between 0 and the assignment's max marks
+  - Pagination on the Users list
 - Swagger/OpenAPI docs for the backend
 - Unit tests (xUnit) covering the core business rules above
 
@@ -156,7 +157,7 @@ dotnet test
 ## Known Limitations
 
 - No password reset / forgot-password flow.
-- No pagination or advanced filtering on list endpoints (Users, Assignments, Submissions).
+- Pagination is implemented for the Users list (Admin dashboard, `GET /api/Users?page=&pageSize=`). Other list endpoints (Assignments, Submissions) do not yet have pagination or advanced filtering.
 - JWT tokens are valid for 24 hours; there is no refresh-token flow.
 - File/attachment uploads are not implemented — submissions are text-based answers only.
 - No email notifications for publishing, grading, or deadlines.
