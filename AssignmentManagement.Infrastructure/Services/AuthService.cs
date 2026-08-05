@@ -47,7 +47,6 @@ public class AuthService
         await _db.SaveChangesAsync();
 
         var token = GenerateToken(user, role.Name);
-
         return new AuthResponseDto
         {
             Id = user.Id,
@@ -67,7 +66,6 @@ public class AuthService
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash)) return null;
 
         var token = GenerateToken(user, user.Role.Name);
-
         return new AuthResponseDto
         {
             Id = user.Id,
@@ -79,9 +77,15 @@ public class AuthService
         };
     }
 
-    public async Task<List<UserDto>> GetAllUsersAsync()
+    public async Task<PagedResultDto<UserDto>> GetAllUsersAsync(int page = 1, int pageSize = 10)
     {
-        return await _db.Users.Include(u => u.Role)
+        var query = _db.Users.Include(u => u.Role).AsQueryable();
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(u => u.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(u => new UserDto
             {
                 Id = u.Id,
@@ -91,6 +95,14 @@ public class AuthService
                 ClassId = u.ClassId
             })
             .ToListAsync();
+
+        return new PagedResultDto<UserDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<bool> DeleteUserAsync(int id)

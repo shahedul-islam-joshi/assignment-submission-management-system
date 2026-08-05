@@ -18,9 +18,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        return Ok(await _authService.GetAllUsersAsync());
+        return Ok(await _authService.GetAllUsersAsync(page, pageSize));
     }
 
     [HttpPost]

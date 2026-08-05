@@ -22,6 +22,14 @@ interface UserItem {
   role: string;
 }
 
+interface PagedUsers {
+  items: UserItem[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 interface TeacherAssignmentItem {
   id: number;
   teacherId: number;
@@ -37,6 +45,9 @@ export default function AdminDashboard() {
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [subjects, setSubjects] = useState<SubjectItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
+  const [userPage, setUserPage] = useState(1);
+  const [totalUserPages, setTotalUserPages] = useState(1);
+  const [teachersList, setTeachersList] = useState<UserItem[]>([]);
   const [teacherAssignments, setTeacherAssignments] = useState<TeacherAssignmentItem[]>([]);
   const [selectedTeacherId, setSelectedTeacherId] = useState("");
   const [selectedSubjectId, setSelectedSubjectId] = useState("");
@@ -53,17 +64,20 @@ export default function AdminDashboard() {
     loadData();
   }, []);
 
-  const loadData = async () => {
-    const [c, s, u, t] = await Promise.all([
+  const loadData = async (page = userPage) => {
+    const [c, s, u, t, allUsers] = await Promise.all([
       api.get("/classes"),
       api.get("/subjects"),
-      api.get("/users"),
+      api.get<PagedUsers>(`/users?page=${page}&pageSize=5`),
       api.get("/teacherassignments"),
+      api.get<PagedUsers>(`/users?page=1&pageSize=1000`),
     ]);
     setClasses(c.data);
     setSubjects(s.data);
-    setUsers(u.data);
+    setUsers(u.data.items);
+    setTotalUserPages(u.data.totalPages);
     setTeacherAssignments(t.data);
+    setTeachersList(allUsers.data.items.filter((usr) => usr.role === "Teacher"));
   };
 
   const addClass = async (e: React.FormEvent) => {
@@ -88,7 +102,9 @@ export default function AdminDashboard() {
       subjectId: Number(selectedSubjectId),
       classId: Number(selectedClassId),
     });
-    setSelectedTeacherId(""); setSelectedSubjectId(""); setSelectedClassId("");
+    setSelectedTeacherId("");
+    setSelectedSubjectId("");
+    setSelectedClassId("");
     loadData();
   };
 
@@ -145,13 +161,26 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-between items-center mt-4">
+            <button
+              disabled={userPage <= 1}
+              onClick={() => { const p = userPage - 1; setUserPage(p); loadData(p); }}
+              className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50 text-sm"
+            >Previous</button>
+            <span className="text-sm">Page {userPage} of {totalUserPages}</span>
+            <button
+              disabled={userPage >= totalUserPages}
+              onClick={() => { const p = userPage + 1; setUserPage(p); loadData(p); }}
+              className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50 text-sm"
+            >Next</button>
+          </div>
         </div>
         <div className="bg-white p-6 rounded shadow md:col-span-2">
           <h2 className="font-bold mb-4">Assign Teacher to Subject + Class</h2>
           <form onSubmit={assignTeacher} className="flex gap-2 mb-4">
             <select value={selectedTeacherId} onChange={e => setSelectedTeacherId(e.target.value)} className="border p-2 rounded flex-1" required>
               <option value="">Select Teacher</option>
-              {users.filter(u => u.role === "Teacher").map(t => <option key={t.id} value={t.id}>{t.fullName}</option>)}
+              {teachersList.map(t => <option key={t.id} value={t.id}>{t.fullName}</option>)}
             </select>
             <select value={selectedSubjectId} onChange={e => setSelectedSubjectId(e.target.value)} className="border p-2 rounded flex-1" required>
               <option value="">Select Subject</option>
